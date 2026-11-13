@@ -27,8 +27,8 @@ as required by MASTER_PROMPT.md.
 
 These items are planned, not yet verified.
 
-- [ ] Automated pure-rule tests cover all eight winning lines, draws, invalid moves, turn progression, scoring once per completed round, and both reset transitions.
-- [x] Scaffold production build succeeds. Repeat after implementing gameplay, styling, and narration.
+- [x] Automated pure-rule tests cover all eight winning lines, draws, invalid moves, turn progression, scoring once per completed round, and both reset transitions.
+- [x] Gameplay production build succeeds. Repeat after implementing CRT styling and narration.
 - [ ] Manual gameplay confirms X starts, occupied cells are protected, and finished rounds accept no more moves.
 - [ ] Next round preserves scores and memory; Reset session clears both; reload clears session state.
 - [ ] Narrator captions follow selected triggers, prioritize results, avoid stale queues, and do not block moves.
@@ -60,3 +60,13 @@ These items are planned, not yet verified.
 - No browser/manual gameplay verification has occurred; the placeholder has no game behavior yet.
 - Exact fonts and original dialogue remain pending review. No deployment or commit was made.
 - .agent/ is ignored for new files but existing planning files remain tracked; the earlier untracking permission request was rejected. Resolve before committing.
+
+## Gameplay progress
+
+- Implemented the client-side board, live turn/result status, winning-cell highlights, session scoreboard, Next round, and Reset session.
+- Pure game rules and reducer are separate from the UI; accepted moves and resets expose events for the future narrator.
+- Twenty-six rule tests pass, including an exhaustive check of all 5,478 reachable boards. Type checking and the production build pass.
+- Production HTTP smoke check returned 200 with nine labeled board buttons and both reset controls. The temporary verification server was stopped.
+- Browser interaction, screen-reader, and mobile visual checks remain unverified. Do not tick manual verification or the application baseline from rule tests alone.
+- Tests use Node's built-in runner and TypeScript stripping. Minimum supported Node version is now 22.6, reflected in package.json, the lockfile, and README.
+- No narrator, custom font assets, CRT scene, deployment, or commit was added in this step.
