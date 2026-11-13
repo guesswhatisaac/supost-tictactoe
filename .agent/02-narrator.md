@@ -69,7 +69,7 @@ Examples:
 - Scores and completed-round totals remain in shared game state, avoiding duplicate narrator counters. Narrator memory separately stores round progression, opening cells, and used lines.
 - Narrator toggle state and resume dialogue were removed following the user's instruction. Sound muting never hides captions or changes game state; the narrator can acknowledge speaker-switch use without preventing it.
 - Reset session clears opening, round, and repetition memory, with fresh restart commentary.
-- On desktop, captions are left-aligned on the right wall in darker printed-looking ink with no button below. Narrow/short screens retain a dedicated scene footer. Both placements avoid the board and controls.
+- Captions are left-aligned dark ink integrated into the desk at every size, following the user's latest placement request. Portrait layouts reserve lower desk space; short landscape layouts use the lower-left desk. Keep text clear of the computer and keyboard.
 - Caption updates use a polite live region, separate from authoritative turn/result announcements.
 - Uses the user-approved bundled Barlow Condensed for captions, with system fallbacks while loading.
 
@@ -77,7 +77,7 @@ Examples:
 
 Pure-rule tests cover priority, openings, replay progression, alternate lines,
 and resets. Browser checks cover actual interactions, reload
-behavior, and every caption fitting at nine viewport sizes without overlap or scrolling.
+behavior, and all 134 captions fitting at 42 screen/zoom scenarios without overlap or scrolling.
 
 ## Reference analysis and expanded pathways
 

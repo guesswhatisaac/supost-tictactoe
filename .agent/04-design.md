@@ -39,14 +39,15 @@ board lines, and scores. Amber remains the lamp-light accent.
 - Site logo: an original beige CRT silhouette with a dark screen, green tic-tac-toe grid, X/O marks, mustard control, and monitor stand. Canonical transparent vector at public/logo.svg, with PNG, favicon, and Apple icon exports. Browser metadata uses these assets.
 
 - Small desk-and-CRT composition in dim charcoal surroundings with a warm desk lamp.
-- Updated from the user's supplied layout reference: a large centered original Tic-Tac-Toe wordmark above the CRT, lamp on the left, keyboard in front, and mug on the right. Borrow composition and atmosphere without reproducing the reference's title art or numbered wall.
+- Following the user's desktop composition correction, center the original single-line Tic-Tac-Toe wordmark above the CRT, with the keyboard directly below and the lamp/mug grouped alongside. Keep the title entirely above the wall trim. Use a compact side-by-side arrangement only on short landscape viewports where height requires it.
 - The board is inside the CRT screen.
 - Use green phosphor marks and screen content on a near-black CRT screen, with subtle glow and depth. X and O remain distinguishable by shape.
 - Add static scanlines, a fine phosphor-mask texture, edge shading, and a faint glass reflection. Overlays are decorative, ignore pointer input, and do not flicker or animate.
 - Use a dark blue-gray upper wall and darker lower paneling, with a clear thin horizontal chair rail near 56% of the viewport height, based on the user's clarified reference. No vertical stripe behind the title. Keep the room and tabletop dim, with restrained lamp spill.
 - The tabletop spans the full viewport and continues into the foreground; it must not end as a floating slab inside the scene container.
-- On desktop, put captions on the wall to the right of the CRT, left-aligned and rendered in darker wall-colored ink, without a caption box or glow. They should feel printed into the wallpaper. No narrator button, as requested by the user.
-- On narrow or short landscape screens, use the dedicated lower caption area to avoid covering the computer or shrinking game targets. Caption placement must not introduce scrolling or overlap controls.
+- Captions are left-aligned dark ink integrated into the tabletop, without a caption box or glow. This supersedes the earlier right-wall placement. Reserve lower desk space on portrait screens and lower-left desk space on short landscape screens. No narrator button.
+- Caption placement must not introduce scrolling, leave the tabletop, or overlap the computer, keyboard, or controls.
+- On desktop, place narration on the wall to the right of the computer, with left-aligned dark wall-colored lettering. This supersedes the desktop desk placement; compact layouts retain their reserved desk area.
 - Fixed camera with subtle interaction effects. No camera drift.
 - Build scenery from HTML and CSS shapes; no external 3D model assets.
 - Fluorescent office lighting remains reference context rather than the selected scene lighting.
@@ -66,6 +67,9 @@ painting, numbered-door motifs such as "42", or screenshot textures.
 - Decorative perspective must preserve legible labels and usable cell targets.
 - Fit the composition to the available viewport height so the board, scores, and reset controls can be seen without scrolling on common desktop, tablet, and phone screens. Adapt the title and scene to a side-by-side layout on short landscape viewports.
 - Size the board from the scene's available height and width. Clip only decorative overflow; do not hide gameplay or controls to simulate a fitting layout.
+- Scale scenery, CRT, board, typography, spacing, and textures together using one viewport-relative unit. Avoid fixed maximum dimensions that make the computer tiny at browser zoom-out. Preserve readable minimum text sizes and at least 44px game/control targets at zoom-in.
+- Hide scenery props on portrait and short landscape layouts. Keep the monitor stand seated on the tabletop as the viewport changes.
+- On portrait screens, keep narration in normal layout flow just below the monitor stand rather than pinned to the viewport bottom. Distribute spare vertical room above/below the composition and move the tabletop with it, reducing the large empty desk gap on tall phones.
 
 ## Copy and visual restraint
 

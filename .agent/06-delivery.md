@@ -180,3 +180,22 @@ restriction to simple move/result triggers. Game rules and the one-scene scope r
 
 - Created an original code-native SVG CRT/game logo matching the beige, phosphor-green, and mustard palette, plus a transparent 512px PNG, 32px ICO favicon, and 180px Apple icon.
 - Added browser icon metadata in the root layout. Kept the established page wordmark and scene composition intact.
+
+## Responsive and zoom pass
+
+- Moved the title wholly onto the wall and narration into the desk surface, following the latest user request. Wide layouts pair a left wall title with the computer on the right; portrait layouts center the title and computer. Short landscapes reserve lower-left desk space for captions.
+- Consolidated responsive scenery in src/app/scene.css. A shared viewport-relative unit scales the CRT, board, props, fonts, spacing, and textures together, avoiding the tiny floating monitor seen at zoom-out. Retained readable text and at least 44px game/control targets. Simplified props on compact layouts.
+- Corrected a short-landscape caption overlap and a monitor-stand/tabletop gap. Disabled Next.js's development indicator because it covered the desk/captions on small screens.
+- Browser geometry checks pass 42 cases: 23 screen sizes from 280px phones to 3840px desktops, 15 zoom-equivalent viewports spanning 25% to 300% on a 1920x960 display, and four high-density cases. All 134 captions stay on the desk without computer/keyboard overlap, clipping, or page scrolling. Reviewed representative desktop, portrait, and zoom screenshots.
+- Full browser regression passes gameplay, narration pathways/pacing, keyboard focus/accessibility attributes, props, mute/hover/audio output, fonts, cursor, and mug layering. All 57 automated tests and the production build (including TypeScript) pass.
+- Browser zoom coverage uses viewport/device-scale emulation rather than operating the browser's zoom toolbar. Manual screen-reader and user-device visual/audio review remain. No deployment or commit was made.
+
+## Centered desktop composition correction
+
+- Restored the user's preferred centered desktop arrangement: single-line wall title above the CRT, keyboard directly below, and lamp/mug grouped closer to the computer. Removed the forced title line break. Desk captions remain left-aligned within a centered area.
+- Retained viewport-relative scaling, minimum control sizes, and compact-screen adaptations. Rechecked all 42 screen/zoom cases and all 134 captions; reviewed 1366x768 and 1920x1080 screenshots.
+
+## Phone spacing refinement
+
+- Portrait narration now follows the monitor stand with a small consistent gap, rather than sitting at the viewport bottom. Spare height is distributed around the grouped scene and the desk boundary moves with the computer, reducing empty tabletop space.
+- Rechecked all 42 screen/zoom cases with all 134 captions; inspected 390x844 and 320x568 screenshots. Desktop wall narration remains on the right of the computer with left-aligned text.

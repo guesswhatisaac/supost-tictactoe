@@ -16,7 +16,7 @@
 - **Routing:** Next.js App Router with a single game page.
 - **State:** one React reducer for game/session state, with separate narrator logic. No external state library.
 - **Dialogue:** typed local data with no runtime API calls. Original lines remain subject to user review.
-- **Styling:** Tailwind for layout, CSS for the CRT/scenery and perspective, and shadcn/ui for suitable controls.
+- **Styling:** Tailwind and shadcn/ui for suitable controls; src/app/scene.css owns responsive CRT/scenery styling and perspective, imported by globals.css. One viewport-relative scene unit keeps dimensions, text, and props proportionate across screen sizes and zoom, with logical minimum sizes for legibility and touch controls.
 - **Typography:** user-approved locally bundled Barlow Condensed (Black 900 title, Bold 700 captions) and IBM Plex Mono Bold 700 (controls/status/scores). Use next/font/local with CSS variables and font-display swap. Include the original font licenses in public/fonts.
 - **Rendering:** HTML/CSS with CSS 3D transforms. No Three.js or React Three Fiber.
 - **Sound:** optional quiet Web Audio synthesis, created lazily during interaction, with no audio files or new packages. The bezel sound control is independent of the game reducer and always-on captions. Playback failure must not interrupt gameplay; stop active voices on mute and dispose the audio context on unmount.
