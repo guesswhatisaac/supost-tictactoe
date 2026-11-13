@@ -7,6 +7,7 @@ import { Narration } from "@/components/narration";
 import { SoundToggle } from "@/components/sound-toggle";
 import { gameReducer, type GameAction } from "@/lib/game";
 import { createSoundPlayer, getSoundCue } from "@/lib/sound";
+import { boardKey, type SceneObject } from "@/lib/narrator";
 import { cn } from "@/lib/utils";
 
 export function Game() {
@@ -18,9 +19,68 @@ export function Game() {
     player.current = null;
   }, []);
 
+  useEffect(() => {
+    const room = document.querySelector<HTMLElement>(".game-room");
+    if (!room) return;
+    function interact(object: SceneObject) {
+      dispatch({ type: "object-click", object, at: performance.now() });
+      if (soundEnabled) {
+        player.current ??= createSoundPlayer();
+        void player.current.play(object);
+      }
+    }
+    function click(event: MouseEvent) {
+      if (!(event.target instanceof Element) || !room) return;
+      if (event.target.closest(".game-terminal, button, a") || window.getSelection()?.toString()) return;
+      const prop = event.target.closest<HTMLElement>("[data-scene-object]");
+      if (prop) {
+        interact(prop.dataset.sceneObject as SceneObject);
+        return;
+      }
+      const deskHeight = parseFloat(getComputedStyle(room, "::before").height);
+      interact(event.clientY >= room.getBoundingClientRect().bottom - deskHeight ? "desk" : "wall");
+    }
+    function keydown(event: KeyboardEvent) {
+      if (event.repeat || (event.key !== "Enter" && event.key !== " ")) return;
+      const prop = event.target instanceof Element ? event.target.closest<HTMLElement>("[data-scene-object]") : null;
+      if (!prop) return;
+      event.preventDefault();
+      interact(prop.dataset.sceneObject as SceneObject);
+    }
+    room.addEventListener("click", click);
+    room.addEventListener("keydown", keydown);
+    return () => {
+      room.removeEventListener("click", click);
+      room.removeEventListener("keydown", keydown);
+    };
+  }, [soundEnabled]);
+
+  useEffect(() => {
+    if (state.game.result.type !== "playing" || state.narrator.idleGiven) return;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    function clear() { clearTimeout(timer); }
+    function arm() {
+      clear();
+      if (document.hidden || !document.hasFocus()) return;
+      timer = setTimeout(() => dispatch({
+        type: "idle", boardKey: boardKey(state.game.board), roundIndex: state.narrator.roundIndex,
+      }), 18_000);
+    }
+    arm();
+    document.addEventListener("visibilitychange", arm);
+    window.addEventListener("focus", arm);
+    window.addEventListener("blur", clear);
+    return () => {
+      clear();
+      document.removeEventListener("visibilitychange", arm);
+      window.removeEventListener("focus", arm);
+      window.removeEventListener("blur", clear);
+    };
+  }, [state.game.board, state.game.result.type, state.narrator.roundIndex, state.narrator.idleGiven]);
+
   function act(action: GameAction) {
     const next = gameReducer(state.game, action);
-    dispatch(action);
+    dispatch({ ...action, at: performance.now() });
     const cue = getSoundCue(state.game, next, action);
     if (soundEnabled && cue) {
       player.current ??= createSoundPlayer();
@@ -30,6 +90,7 @@ export function Game() {
 
   function toggleSound() {
     if (soundEnabled) player.current?.stop();
+    dispatch({ type: "sound-change", enabled: !soundEnabled, at: performance.now() });
     setSoundEnabled(!soundEnabled);
   }
   function hover(target: number) {
@@ -60,7 +121,7 @@ export function Game() {
                     type="button"
                     aria-label={`Row ${Math.floor(index / 3) + 1}, column ${index % 3 + 1}: ${mark ?? "empty"}${winning ? ", winning cell" : ""}`}
                     aria-disabled={unavailable}
-                    onClick={() => { if (!unavailable) act({ type: "play", index }); }}
+                    onClick={() => act({ type: "play", index })}
                     onPointerEnter={(event) => { if (!unavailable && event.pointerType !== "touch") hover(index); }}
                     onFocus={() => { if (!unavailable) hover(index); }}
                     className={cn("board-cell", mark === "X" && "mark-x", mark === "O" && "mark-o", winning && "winning-cell")}

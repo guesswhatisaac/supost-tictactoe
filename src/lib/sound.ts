@@ -1,6 +1,7 @@
 import type { GameAction, GameState } from "./game.ts";
+import type { SceneObject } from "./narrator.ts";
 
-export type SoundCue = "move-x" | "move-o" | "win" | "draw" | "next-round" | "reset-session";
+export type SoundCue = "move-x" | "move-o" | "win" | "draw" | "next-round" | "reset-session" | SceneObject;
 
 export function getSoundCue(previous: GameState, next: GameState, action: GameAction): SoundCue | null {
   if (previous === next) return null;
@@ -15,6 +16,17 @@ type Note = { frequency: number; endFrequency?: number; delay: number; duration:
 const volumeMultiplier = 1.5;
 
 const cues: Record<SoundCue, readonly Note[]> = {
+  keyboard: [
+    { frequency: 1100, delay: 0, duration: 0.035 },
+    { frequency: 780, delay: 0.025, duration: 0.04 },
+  ],
+  mug: [
+    { frequency: 880, endFrequency: 830, delay: 0, duration: 0.19, wave: "sine" },
+    { frequency: 1320, delay: 0.005, duration: 0.08, wave: "sine" },
+  ],
+  lamp: [{ frequency: 180, delay: 0, duration: 0.07 }],
+  wall: [{ frequency: 220, delay: 0, duration: 0.09 }],
+  desk: [{ frequency: 150, delay: 0, duration: 0.12 }],
   "move-x": [
     { frequency: 660, delay: 0, duration: 0.10 },
     { frequency: 880, delay: 0.075, duration: 0.12 },
