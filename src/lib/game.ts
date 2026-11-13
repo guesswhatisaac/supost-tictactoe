@@ -7,7 +7,8 @@ export type RoundResult =
   | { type: "draw" };
 
 type GameEvent =
-  | { type: "round-start" | "session-reset" }
+  | { type: "round-start" }
+  | { type: "session-reset" }
   | { type: "move"; index: number; mark: Mark; opening: boolean; blockedWin: boolean };
 
 export type GameState = {
