@@ -28,13 +28,13 @@ as required by MASTER_PROMPT.md.
 These items are planned, not yet verified.
 
 - [x] Automated pure-rule tests cover all eight winning lines, draws, invalid moves, turn progression, scoring once per completed round, and both reset transitions.
-- [x] Gameplay production build succeeds. Repeat after implementing CRT styling and narration.
-- [ ] Manual gameplay confirms X starts, occupied cells are protected, and finished rounds accept no more moves.
+- [x] Gameplay and CRT scene production build succeeds. Repeat after implementing narration.
+- [ ] Complete final manual gameplay review; browser automation has verified X starts, a win, and both resets, while rule tests cover invalid moves and terminal locking.
 - [ ] Next round preserves scores and memory; Reset session clears both; reload clears session state.
 - [ ] Narrator captions follow selected triggers, prioritize results, avoid stale queues, and do not block moves.
 - [ ] Narration toggle leaves gameplay intact and preserves silent round tracking.
 - [ ] Turning narration off hides the caption; both reset controls preserve the toggle and remove stale captions, showing a fresh opening only when enabled.
-- [ ] Mobile layout keeps the board, status, controls, and captions usable.
+- [ ] Complete final mobile review including narrator captions. Browser checks currently verify the board, status, and reset controls at 390px and 320px.
 - [ ] Keyboard operation, visible focus, status announcements, readable contrast, and reduced-motion behavior work.
 - [ ] User reviews the visual result, exact fonts, and original dialogue.
 
@@ -70,3 +70,27 @@ These items are planned, not yet verified.
 - Browser interaction, screen-reader, and mobile visual checks remain unverified. Do not tick manual verification or the application baseline from rule tests alone.
 - Tests use Node's built-in runner and TypeScript stripping. Minimum supported Node version is now 22.6, reflected in package.json, the lockfile, and README.
 - No narrator, custom font assets, CRT scene, deployment, or commit was added in this step.
+
+## CRT scene progress
+
+- Implemented the approved CSS 3D CRT composition, warm lamp, desk, mug, and keyboard using HTML/CSS only. The view is fixed.
+- Mobile layout retains the CRT, hides peripheral props, and preserves playable cell sizes and reset controls.
+- Kept native board buttons, accessible labels and status updates, winning highlights, visible focus styling, and reduced-motion behavior. No custom font assets or narrator dialogue were added.
+- Verified in headless Chrome: a desktop winning round, winning-cell highlights, Next round preserving score, Reset session clearing score, mobile pointer input, keyboard Enter activation, 44px minimum controls and no horizontal overflow at 390px and 320px, and reduced-motion transition removal.
+- Inspected desktop and mobile screenshots. Final user visual review and screen-reader checks remain pending.
+- All 26 game-rule tests and the production build pass after styling.
+- Reused the user's running development server at localhost:3000 without stopping it. Browser verification used a separate temporary profile.
+
+## Layout refinement
+
+- Removed the user-rejected labels, their sections and divider lines, and the visible reset-explanation paragraph. Reset buttons retain descriptive titles.
+- Recentered the title and CRT, moved the lamp left and mug right, and sized the composition from the viewport. Short landscape screens use a side-by-side title and terminal.
+- Headless Chrome checks confirm no page scrolling and all gameplay/reset controls visible with at least 44px targets at 1920x1080, 1440x900, 1366x768, 1280x720, 768x1024, 390x844, 375x667, 320x568, and 844x390.
+- Rechecked desktop winning play, both resets, mobile input, keyboard Enter activation, and reduced-motion handling. Inspected desktop and phone screenshots.
+
+## CRT and environment refinement
+
+- Darkened the CRT, changed screen content to green phosphor, and added static scanlines, phosphor-mask texture, glass reflection, and edge shading. Overlays ignore pointer events.
+- Added CSS blue-gray wall panels and dark trim inspired by the user's latest reference.
+- Moved the tabletop from the bounded scene to a full-viewport decorative layer, removing the abrupt side cutoff.
+- Rechecked gameplay, resets, keyboard/mobile input, and no-scroll/44px-control requirements across all nine documented viewport sizes. Inspected the updated desktop and phone screenshots.

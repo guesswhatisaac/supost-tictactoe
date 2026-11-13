@@ -13,62 +13,54 @@ export function Game() {
     : result.type === "draw" ? "It's a draw." : `${turn}'s turn`;
 
   return (
-    <section aria-labelledby="game-title" className="mx-auto w-full max-w-lg">
-      <header>
-        <p className="text-sm font-medium uppercase tracking-[0.2em] text-primary">Local two-player</p>
-        <h1 id="game-title" className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">Tic-Tac-Toe</h1>
-        <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-          Take turns on this device. Get three in a row to win.
-        </p>
-      </header>
+    <section aria-labelledby="game-title" className="game-terminal">
+      <div className="crt-casing">
+        <div className="screen-bezel">
+          <div className="monitor-screen">
+            <p id="game-status" role="status" aria-live="polite" aria-atomic="true" className="game-status" data-result={result.type}>
+              {status}
+            </p>
 
-      <dl aria-label="Session scores" className="mt-8 grid grid-cols-3 divide-x divide-border border border-border bg-card py-4 text-center">
-        {([
-          ["X wins", scores.X], ["Draws", scores.draws], ["O wins", scores.O],
-        ] as const).map(([label, value]) => (
-          <div key={label}>
-            <dt className="text-xs uppercase tracking-wider text-muted-foreground">{label}</dt>
-            <dd className="mt-1 text-2xl font-semibold tabular-nums">{value}</dd>
+            <div role="group" aria-label="Tic-Tac-Toe board" aria-describedby="game-status" className="game-board">
+              {board.map((mark, index) => {
+                const unavailable = mark !== null || result.type !== "playing";
+                const winning = result.type === "win" && result.cells.includes(index);
+                return (
+                  <button
+                    key={index}
+                    type="button"
+                    aria-label={`Row ${Math.floor(index / 3) + 1}, column ${index % 3 + 1}: ${mark ?? "empty"}${winning ? ", winning cell" : ""}`}
+                    aria-disabled={unavailable}
+                    onClick={() => { if (!unavailable) dispatch({ type: "play", index }); }}
+                    className={cn("board-cell", mark === "X" && "mark-x", mark === "O" && "mark-o", winning && "winning-cell")}
+                  >
+                    <span aria-hidden="true">{mark}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            <dl aria-label="Session scores" className="game-scores">
+              {([
+                ["X wins", scores.X], ["Draws", scores.draws], ["O wins", scores.O],
+              ] as const).map(([label, value]) => (
+                <div key={label}>
+                  <dt>{label}</dt>
+                  <dd>{String(value).padStart(2, "0")}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
-        ))}
-      </dl>
-
-      <p id="game-status" role="status" aria-live="polite" aria-atomic="true" className="my-6 text-center text-xl font-semibold">
-        {status}
-      </p>
-
-      <div role="group" aria-label="Tic-Tac-Toe board" aria-describedby="game-status" className="grid grid-cols-3 gap-2">
-        {board.map((mark, index) => {
-          const unavailable = mark !== null || result.type !== "playing";
-          const winning = result.type === "win" && result.cells.includes(index);
-          return (
-            <button
-              key={index}
-              type="button"
-              aria-label={`Row ${Math.floor(index / 3) + 1}, column ${index % 3 + 1}: ${mark ?? "empty"}${winning ? ", winning cell" : ""}`}
-              aria-disabled={unavailable}
-              onClick={() => { if (!unavailable) dispatch({ type: "play", index }); }}
-              className={cn(
-                "flex aspect-square min-h-16 items-center justify-center rounded-sm border border-border bg-card text-5xl font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none sm:text-6xl",
-                !unavailable && "cursor-pointer hover:bg-secondary/40",
-                unavailable && "cursor-default",
-                mark === "X" ? "text-primary" : "text-foreground",
-                winning && "border-primary bg-primary/15",
-              )}
-            >
-              <span aria-hidden="true">{mark}</span>
-            </button>
-          );
-        })}
+        </div>
+        <div className="monitor-controls">
+          <div className="monitor-badge" aria-hidden="true"><span className="power-light" /> TTT</div>
+          <div className="round-controls">
+            <Button type="button" title="Clear the board and keep scores" className="terminal-button" onClick={() => dispatch({ type: "next-round" })}>Next round</Button>
+            <Button type="button" title="Clear the board and all scores" variant="outline" className="terminal-button terminal-button-secondary" onClick={() => dispatch({ type: "reset-session" })}>Reset session</Button>
+          </div>
+        </div>
       </div>
-
-      <div className="mt-6 flex flex-wrap gap-3">
-        <Button type="button" className="flex-1" onClick={() => dispatch({ type: "next-round" })}>Next round</Button>
-        <Button type="button" variant="outline" className="flex-1" onClick={() => dispatch({ type: "reset-session" })}>Reset session</Button>
-      </div>
-      <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-        Next round clears the board and keeps scores. Reset session clears both. Reloading starts a fresh session.
-      </p>
+      <div className="monitor-stand" aria-hidden="true" />
     </section>
   );
 }

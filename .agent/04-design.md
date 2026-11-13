@@ -30,14 +30,19 @@ Reference qualities:
 | Lamp light | Warm amber | #E8A94B |
 | Text | Off-white | #F2F0EA |
 
-Muted gray dominates, mustard is the primary accent, and phosphor green or amber
-is reserved for light sources.
+Muted gray dominates; mustard accents the title and physical controls. Following the
+user's CRT refinement, phosphor green also colors the on-screen marks, turn/result,
+board lines, and scores. Amber remains the lamp-light accent.
 
 ## Selected scene
 
 - Small desk-and-CRT composition in dim charcoal surroundings with a warm desk lamp.
+- Updated from the user's supplied layout reference: a large centered original Tic-Tac-Toe wordmark above the CRT, lamp on the left, keyboard in front, and mug on the right. Borrow composition and atmosphere without reproducing the reference's title art or numbered wall.
 - The board is inside the CRT screen.
-- Use the reference mustard and off-white for X and O, with CSS depth effects consistent with the screen composition.
+- Use green phosphor marks and screen content on a near-black CRT screen, with subtle glow and depth. X and O remain distinguishable by shape.
+- Add static scanlines, a fine phosphor-mask texture, edge shading, and a faint glass reflection. Overlays are decorative, ignore pointer input, and do not flicker or animate.
+- Use a dark blue-gray upper wall and darker lower paneling, with a clear thin horizontal chair rail near 56% of the viewport height, based on the user's clarified reference. No vertical stripe behind the title. Keep the room and tabletop dim, with restrained lamp spill.
+- The tabletop spans the full viewport and continues into the foreground; it must not end as a floating slab inside the scene container.
 - Bold condensed white subtitles at the bottom, in a dedicated area that does not overlap gameplay or controls.
 - Fixed camera with subtle interaction effects. No camera drift.
 - Build scenery from HTML and CSS shapes; no external 3D model assets.
@@ -56,6 +61,14 @@ painting, numbered-door motifs such as "42", or screenshot textures.
 - On small screens, simplify scenery and enlarge the playable CRT rather than switching to a different flat-board presentation.
 - Keep all nine cells, turn/result text, scores, reset controls, and narrator toggle accessible without scenery obscuring them.
 - Decorative perspective must preserve legible labels and usable cell targets.
+- Fit the composition to the available viewport height so the board, scores, and reset controls can be seen without scrolling on common desktop, tablet, and phone screens. Adapt the title and scene to a side-by-side layout on short landscape viewports.
+- Size the board from the scene's available height and width. Clip only decorative overflow; do not hide gameplay or controls to simulate a fitting layout.
+
+## Copy and visual restraint
+
+- The user rejected promotional labels and filler such as "A game for two", "One device. Nine squares. Three in a row.", "Local / Two players", and the local-player/rules footer.
+- Remove those entire header/footer groups and their divider lines. Keep the title, actual turn/result, scores, and actionable controls.
+- Reset explanations belong on the controls as concise descriptive titles rather than an extra visible paragraph under the monitor.
 
 ## Accessibility and motion
 
