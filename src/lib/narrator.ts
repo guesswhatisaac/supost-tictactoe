@@ -34,6 +34,7 @@ export type NarratorState = {
   distractions: number;
   objectClicks: Partial<Record<SceneObject, number>>;
   buttonBurst: { key: ButtonKind | null; lastAt: number; count: number };
+  captionAt: number | null;
 };
 
 function say(state: NarratorState, category: DialogueCategory, values: Record<string, string | number> = {}): NarratorState {
@@ -83,6 +84,7 @@ export function createNarrator(): NarratorState {
     winStreak: 0, drawStreak: 0, missedWins: { X: 0, O: 0 }, occupiedAttempts: 0,
     finishedAttempts: 0, idleGiven: false, idlePending: false, soundChanges: 0, flags: {},
     distractions: 0, objectClicks: {}, buttonBurst: { key: null, lastAt: 0, count: 0 },
+    captionAt: null,
   }, "welcome");
 }
 
@@ -200,4 +202,22 @@ export function observeButton(previous: NarratorState, next: NarratorState, key:
     return { ...memory, caption: previous.caption, category: previous.category };
   }
   return memory;
+}
+
+const minorAsides = new Set<DialogueCategory>(["keyboard", "mug", "lamp", "wall", "desk", "soundMuted", "soundRestored"]);
+const resultCaptions = new Set<DialogueCategory>(["xWin", "oWin", "draw", "recoveredWin", "fullBoardWin", "winnerStreak", "firstPoint", "comeback", "repeatedDraw", "drawAfterStreak"]);
+
+/** Drop incidental interruptions rather than delaying or queueing game events. */
+export function paceNarrator(previous: NarratorState, next: NarratorState, at?: number): NarratorState {
+  if (next === previous) return previous;
+  if (next.caption === previous.caption) return { ...next, captionAt: previous.captionAt };
+  if (at === undefined || !Number.isFinite(at)) return next;
+  const elapsed = previous.captionAt === null ? Infinity : at - previous.captionAt;
+  if (elapsed >= 0 && minorAsides.has(next.category) && (
+    (minorAsides.has(previous.category) && elapsed < 900) ||
+    (resultCaptions.has(previous.category) && elapsed < 1600)
+  )) {
+    return { ...next, caption: previous.caption, category: previous.category, lastLines: previous.lastLines, captionAt: previous.captionAt };
+  }
+  return { ...next, captionAt: at };
 }

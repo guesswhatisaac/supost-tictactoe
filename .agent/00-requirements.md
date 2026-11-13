@@ -39,7 +39,7 @@ Check items only after verifying them in the running app.
 ## Remaining reviews and authorization
 
 - All six domain documents are initialized from user decisions and approvals.
-- Exact font families still require user review. The user approved the narrator tone progression and authorized its implementation; live dialogue is in src/lib/dialogue.ts.
+- The user approved bundled Barlow Condensed for title/captions and IBM Plex Mono for controls. The narrator tone and implementation are approved; live dialogue is in src/lib/dialogue.ts.
 - The implemented visual result requires review against the approved direction.
 - The user authorized scaffolding after the initialization summary.
 - Vercel deployment requires approval of the prepared application.

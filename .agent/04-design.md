@@ -36,6 +36,8 @@ board lines, and scores. Amber remains the lamp-light accent.
 
 ## Selected scene
 
+- Site logo: an original beige CRT silhouette with a dark screen, green tic-tac-toe grid, X/O marks, mustard control, and monitor stand. Canonical transparent vector at public/logo.svg, with PNG, favicon, and Apple icon exports. Browser metadata uses these assets.
+
 - Small desk-and-CRT composition in dim charcoal surroundings with a warm desk lamp.
 - Updated from the user's supplied layout reference: a large centered original Tic-Tac-Toe wordmark above the CRT, lamp on the left, keyboard in front, and mug on the right. Borrow composition and atmosphere without reproducing the reference's title art or numbered wall.
 - The board is inside the CRT screen.
@@ -70,9 +72,10 @@ painting, numbered-door motifs such as "42", or screenshot textures.
 - The user rejected promotional labels and filler such as "A game for two", "One device. Nine squares. Three in a row.", "Local / Two players", and the local-player/rules footer.
 - Remove those entire header/footer groups and their divider lines. Keep the title, actual turn/result, scores, and actionable controls.
 - Reset explanations belong on the controls as concise descriptive titles rather than an extra visible paragraph under the monitor.
-- Buttons use uppercase retro monospace system lettering (Lucida Console / Courier New), with compact tracking and wrapping on narrow screens. No bundled font asset was added by this refinement.
+- Buttons use user-approved locally bundled IBM Plex Mono Bold, with uppercase lettering, compact tracking, and wrapping on narrow screens. The title uses Barlow Condensed Black; captions use Barlow Condensed Bold, with larger readable mobile text.
 - The entire page uses the same refined beige/green arrow cursor from public/cursors/terminal-pointer.svg, with a dark outline, subtle shadow, and native fallback. It must remain consistent over the wall, text, CRT, buttons, and unavailable cells.
 - The mug handle sits lower on the side and behind the cup body; the rim is the topmost layer.
+- The keyboard, mug, and lamp are interactive scenery buttons with accessible names, Enter/Space support, and visible focus. Wall/tabletop clicks also receive commentary. Interactions must not obstruct the CRT or add visual instruction labels.
 
 ## Accessibility and motion
 
@@ -84,5 +87,6 @@ painting, numbered-door motifs such as "42", or screenshot textures.
 
 ## Approval
 
-The user approved this design. Exact font selection and implementation details are handled
-in the architecture discussion and visual review; no specific font asset is selected yet.
+The user approved this design and selected bundled Barlow Condensed for title/captions
+and IBM Plex Mono for controls. Actual bundled fonts and original licenses are in public/fonts;
+next/font/local handles loading. Final visual review remains part of delivery.

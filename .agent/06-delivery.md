@@ -30,13 +30,15 @@ Checked items have automated verification; unchecked items remain review work.
 - [x] Automated pure-rule tests cover all eight winning lines, draws, invalid moves, turn progression, scoring once per completed round, and both reset transitions.
 - [x] Gameplay, CRT scene, and narrator production build succeeds.
 - [ ] Complete final manual gameplay review; browser automation has verified X starts, a win, and both resets, while rule tests cover invalid moves and terminal locking.
-- [ ] Next round preserves scores and memory; Reset session clears both; reload clears session state.
+- [x] Automated rule/browser checks verify Next round preserves scores and memory, Reset session clears both apart from the documented short-lived spam counter, and reload clears session state.
 - [x] Narrator captions follow selected triggers, prioritize results, avoid stale queues, and do not block moves (rule and browser checks).
 - [x] Narrator button removed at the user's request; captions remain available independently of sound muting.
 - [x] Sound-effects control mutes playback, leaves gameplay and captions intact, and survives both resets (browser checks).
 - [ ] Complete final mobile review including narrator captions. Browser checks currently verify the board, status, and reset controls at 390px and 320px.
-- [ ] Keyboard operation, visible focus, status announcements, readable contrast, and reduced-motion behavior work.
-- [ ] User reviews the visual result, exact fonts, and original dialogue.
+- [x] Browser checks verify keyboard activation, visible focus, accessible cell/prop/control names, polite status/caption regions, and reduced-motion behavior.
+- [ ] Complete manual screen-reader and contrast review, including the user-requested dark wall-lettering treatment.
+- [x] User approved Barlow Condensed and IBM Plex Mono, plus narrator tone and implementation.
+- [ ] User reviews the final rendered visual result and narration pacing.
 
 ## Deployment and handoff
 
@@ -148,3 +150,33 @@ This supersedes historical entries about the narrator toggle and its resume dial
 - Added a 20ms renderer lead-in. X retains a bright rising double tick; O is a rounded descending 440-to-330Hz tone. Next round and Reset session now use longer, clearly pitched two-note cues.
 - Browser verification now routes the actual mixed signal through an analyser rather than relying only on oscillator-start instrumentation. Measured nonzero substantial output for all four cues: X RMS about 0.039, O about 0.048, Next round about 0.039, and Reset session about 0.039.
 - Hover, mute/resume, unsupported-audio fallback, gameplay, and all nine viewport checks still pass. User-device listening review remains necessary for subjective loudness.
+
+## Contextual narration and scenery paths
+
+The user's script-reference and follow-up scenery requests supersede the earlier
+restriction to simple move/result triggers. Game rules and the one-scene scope remain.
+
+- Reviewed the supplied 131-page PDF's organization and representative idle, repeated-action, revisiting, interrupted-story, and restart sections for structure. Wrote original dialogue; no reference dialogue or PDF content is shipped in the application.
+- Expanded to 134 original lines across 56 categories: tactical opportunities, forks, repeated/changed sequences, abandonments, outcome streaks, first points, equalizers, draws, score resets, occupied/finished-cell persistence, pauses, speaker use, scenery, and button spam.
+- Added connected callbacks: missed opportunity to eventual win, repeated abandonment to renewed play, long pause to return, and room detours to returning to the board.
+- Added a once-per-round 18-second idle observation, canceled on blur/hidden pages and protected against stale board/round state. No move is delayed or forced.
+- Keyboard, mug, and lamp have labeled pointer/Enter/Space interactions. The room handler observes wall/table clicks while excluding game controls and text selection. Each object has a distinct synthesized tap, obeying the existing mute setting.
+- Three repeated object taps, six detours, and ten detours progress through familiarity, boredom, and resignation. Rapid control bursts escalate at four and eight presses; valid moves or an 850ms gap break the burst. Only this ephemeral burst counter survives session resets, without retaining board or score history.
+- All 54 automated tests and type checking pass. Production build passes.
+- Browser checks confirm actual contextual paths, the real idle interval and return, pointer and keyboard prop activation, all five object-specific audio outputs, escalating distraction and button-spam behavior, and no game-state changes from props/invalid attempts.
+- All 134 captions fit without CRT/control overlap or page scrolling at all nine documented viewports. Existing gameplay, keyboard, mute, hover, cursor, and audio-output checks still pass.
+- Next review: dialogue pacing and line selection, final font choice, and remaining manual accessibility/visual checks. Deployment remains pending user approval of the prepared application.
+
+## Pacing and bundled-font pass
+
+- Added deterministic reading room for incidental asides: 900ms between routine prop/speaker lines, with 1600ms result priority over those minor interruptions. No queues or gameplay delays. Meaningful game events and deliberate spam/distraction milestones remain immediate.
+- Suppressed asides still track interactions and play sound, but do not count unspoken text as used. Prop, speaker, and occupied-square interactions restart the idle interval.
+- User selected bundled Barlow Condensed for title/captions and IBM Plex Mono for controls. Added unmodified upstream font files plus their original OFL licenses in public/fonts, loaded through next/font/local with no runtime font service. Title uses Barlow Black 900; captions use Bold 700; controls/status/scores use Plex Mono Bold 700.
+- Increased small-screen caption sizing with the condensed face. Inspected desktop and 320px screenshots.
+- All 57 tests, type checking, and the production build pass. Browser checks confirm actual custom-font rendering, caption pacing, native keyboard focus and its visible ring, accessible names, live-region attributes, the full narration/audio/scenery paths, and all 134 captions fitting at all nine documented viewport sizes.
+- Final user visual/pacing review and manual screen-reader/contrast review remain. Preserved the explicitly requested dark wallpaper lettering rather than changing that art direction. No deployment or commit was made.
+
+## Website logo
+
+- Created an original code-native SVG CRT/game logo matching the beige, phosphor-green, and mustard palette, plus a transparent 512px PNG, 32px ICO favicon, and 180px Apple icon.
+- Added browser icon metadata in the root layout. Kept the established page wordmark and scene composition intact.

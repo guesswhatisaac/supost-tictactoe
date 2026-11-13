@@ -38,7 +38,7 @@ phosphor green or amber light, and bold condensed subtitles. See 04-design.md.
 
 Approved narrator behavior is specified in 02-narrator.md: subtitles for openings,
 selected moves, results, and restarts, with page-session memory. The user removed the narrator toggle; captions remain on. A separate bezel control mutes optional sound effects.
-Hesitation and suggested-move reactions are outside scope.
+The user expanded narration to behavioral paths inspired by the supplied script's branching structure: pauses, tactical choices, repeat habits, abandoned rounds, button spam, and scenery interactions. Exact move suggestions and changes to game rules remain outside scope.
 
 Keep subtitles short and gameplay clear. Tone, triggers, and memory are approved;
 the user approved the tone progression and authorized the implemented original dialogue, recorded in src/lib/dialogue.ts.
@@ -56,7 +56,7 @@ the user approved the tone progression and authorized the implemented original d
 | 06-delivery.md | Vercel setup, verification, task order, public URL |
 
 Decisions live in the relevant doc. All six domain documents are initialized and approved.
-Exact bundled fonts and final implemented visuals remain review items. Narrator tone and implementation are approved in 02-narrator.md.
+Bundled Barlow Condensed and IBM Plex Mono are approved. Final implemented visuals remain a review item. Narrator tone and implementation are approved in 02-narrator.md.
 
 ## 5. Initialization protocol
 

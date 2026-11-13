@@ -76,7 +76,8 @@ export function Game() {
       window.removeEventListener("focus", arm);
       window.removeEventListener("blur", clear);
     };
-  }, [state.game.board, state.game.result.type, state.narrator.roundIndex, state.narrator.idleGiven]);
+  }, [state.game.board, state.game.result.type, state.narrator.roundIndex, state.narrator.idleGiven,
+    state.narrator.distractions, state.narrator.soundChanges, state.narrator.occupiedAttempts]);
 
   function act(action: GameAction) {
     const next = gameReducer(state.game, action);

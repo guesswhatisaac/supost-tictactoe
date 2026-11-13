@@ -29,4 +29,4 @@ choices with dry, understated humor and an awareness of the game's mechanics.
 - Approved local two-player rules and session controls are specified in 03-game-logic.md.
 - Domain documents define implementation scope; this concept does not introduce extra features.
 
-Approved by the user. Fonts, original dialogue, and the implemented visuals remain review items in the delivery workflow.
+Approved by the user. Font families and original narrator implementation are now approved in their domain docs; final implemented visuals remain a delivery review item.

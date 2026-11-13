@@ -11,7 +11,7 @@
 - A full board without a winner is a draw. Check for a win before declaring a draw.
 - No moves are accepted after a win or draw.
 - Show the current turn during play and the result when the round ends.
-- No move history or undo.
+- No visible move history or undo. The narrator may retain bounded current/previous move sequences for recognizing habits; that memory never changes game rules.
 
 ## Session scoreboard
 

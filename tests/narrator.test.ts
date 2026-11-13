@@ -231,3 +231,42 @@ test("session updates never mutate the previous game or narrator state", () => {
   sessionReducer(state, { type: "reset-session" });
   assert.deepEqual(state, snapshot);
 });
+
+test("rapid scenery asides leave reading room while tracking every detour", () => {
+  const keyboard = sessionReducer(createSession(), { type: "object-click", object: "keyboard", at: 1000 });
+  const mug = sessionReducer(keyboard, { type: "object-click", object: "mug", at: 1100 });
+  assert.equal(mug.narrator.caption, keyboard.narrator.caption);
+  assert.equal(mug.narrator.distractions, 2);
+  assert.equal(mug.narrator.objectClicks.mug, 1);
+  assert.equal(mug.narrator.lastLines.mug, undefined);
+  const later = sessionReducer(mug, { type: "object-click", object: "mug", at: 2000 });
+  assert.equal(later.narrator.category, "mug");
+  assert.equal(later.narrator.captionAt, 2000);
+});
+
+test("results get reading priority over incidental clicks without delaying controls", () => {
+  const beforeWin = play([0, 3, 1, 4]);
+  const won = sessionReducer(beforeWin, { type: "play", index: 2, at: 5000 });
+  const tap = sessionReducer(won, { type: "object-click", object: "wall", at: 5100 });
+  assert.equal(tap.narrator.caption, won.narrator.caption);
+  assert.strictEqual(tap.game, won.game);
+  const later = sessionReducer(tap, { type: "object-click", object: "wall", at: 6700 });
+  assert.equal(later.narrator.category, "wall");
+  const nextRound = sessionReducer(won, { type: "next-round", at: 5100 });
+  assert.equal(nextRound.game.result.type, "playing");
+  assert.deepEqual(nextRound.game.scores, won.game.scores);
+  assert.equal(nextRound.narrator.category, "next");
+});
+
+test("meaningful results and deliberate distraction escalation never wait behind minor chatter", () => {
+  let state = sessionReducer(play([0, 3, 1, 4]), { type: "object-click", object: "mug", at: 1000 });
+  const won = sessionReducer(state, { type: "play", index: 2, at: 1010 });
+  assert.equal(won.narrator.category, "xWin");
+  assert.equal(won.game.result.type, "win");
+  state = createSession();
+  for (let click = 0; click < 6; click++) {
+    state = sessionReducer(state, { type: "object-click", object: click % 2 ? "mug" : "wall", at: 1000 + click * 50 });
+  }
+  assert.equal(state.narrator.category, "distractionBored");
+  assert.equal(state.narrator.distractions, 6);
+});
