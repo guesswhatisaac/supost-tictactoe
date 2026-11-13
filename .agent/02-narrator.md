@@ -46,8 +46,38 @@
 - Next round and Reset session preserve the toggle setting and discard the previous caption. When enabled, show fresh opening commentary; when disabled, leave captions hidden.
 - Reset session clears round history and line-repetition memory. Next round preserves them.
 
-## Approval and dialogue review
+## Approved tone and implementation
 
-The behavior spec is approved by the user.
-Actual dialogue remains subject to user review; approving this spec does not approve
-unwritten lines. Dialogue quantity will be settled when preparing that content.
+The user selected a politely controlling baseline, with quiet exasperation emerging
+across replays, and explicitly authorized implementation. This supersedes the earlier
+dialogue draft. The live, editable source is src/lib/dialogue.ts: 48 original lines,
+with polite and weary alternatives for each approved category.
+
+Examples:
+- Initial center opening: "Yes, the middle. We'll proceed from there."
+- Same center opening next round: "The middle again. You seem comfortable there."
+- Repeating it in the third round: "I'll stop asking the other squares to prepare."
+- Early block: "I would have preferred you leave that open."
+- Later block: "We were one move from being finished."
+- Early draw: "Nothing settled, then."
+- Later draw: "Nine moves. I was here for all of them."
+
+## Runtime behavior
+
+- A deterministic pure session reducer coordinates independent game and narrator logic. No narration effects, timers, network calls, or external state library.
+- First and second rounds use the polite pool; the third round onward uses the weary pool. Starting another round advances this progression even when abandoning a board.
+- Repeated openings compare the same cell against the previous meaningful round opening. Empty rounds do not erase that reference.
+- Alternate lines within a category and tone avoid the most recently used line for that category. No random initialization or hydration mismatch.
+- Win/draw commentary takes precedence over move commentary. Ordinary moves preserve the current caption; invalid moves change nothing.
+- Scores and completed-round totals remain in shared game state, avoiding duplicate narrator counters. Narrator memory separately stores round progression, opening cells, and used lines.
+- Muting clears the caption immediately while game state and opening memory continue updating. Resume shows a fresh neutral line, never a queue of missed captions.
+- Both reset controls preserve the toggle. Reset session clears opening, round, and repetition memory, with a fresh reset caption when enabled.
+- On desktop, captions are left-aligned on the right wall in darker printed-looking ink, with the visible toggle beneath. Narrow/short screens retain a dedicated scene footer. Both placements avoid the board and controls and reserve space while muted to prevent layout shifts.
+- Caption updates use a polite live region, separate from authoritative turn/result announcements.
+- Uses system font fallbacks until exact bundled fonts are reviewed.
+
+## Verification
+
+Pure-rule tests cover priority, openings, replay progression, alternate lines, silent
+tracking, resume, and resets. Browser checks cover actual interactions, reload
+behavior, and every caption fitting at nine viewport sizes without overlap or scrolling.

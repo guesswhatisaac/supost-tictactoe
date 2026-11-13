@@ -1,18 +1,44 @@
 "use client";
 
-import { useReducer } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { createGame, gameReducer } from "@/lib/game";
+import { createSession, sessionReducer } from "@/lib/session";
+import { Narration } from "@/components/narration";
+import { SoundToggle } from "@/components/sound-toggle";
+import { gameReducer, type GameAction } from "@/lib/game";
+import { createSoundPlayer, getSoundCue } from "@/lib/sound";
 import { cn } from "@/lib/utils";
 
 export function Game() {
-  const [state, dispatch] = useReducer(gameReducer, undefined, createGame);
-  const { board, turn, result, scores } = state;
+  const [state, dispatch] = useReducer(sessionReducer, undefined, createSession);
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const player = useRef<ReturnType<typeof createSoundPlayer> | null>(null);
+  useEffect(() => () => {
+    player.current?.dispose();
+    player.current = null;
+  }, []);
+
+  function act(action: GameAction) {
+    const next = gameReducer(state.game, action);
+    dispatch(action);
+    const cue = getSoundCue(state.game, next, action);
+    if (soundEnabled && cue) {
+      player.current ??= createSoundPlayer();
+      void player.current.play(cue);
+    }
+  }
+
+  function toggleSound() {
+    if (soundEnabled) player.current?.stop();
+    setSoundEnabled(!soundEnabled);
+  }
+  const { board, turn, result, scores } = state.game;
   const status = result.type === "win"
     ? `${result.winner} wins!`
     : result.type === "draw" ? "It's a draw." : `${turn}'s turn`;
 
   return (
+    <>
     <section aria-labelledby="game-title" className="game-terminal">
       <div className="crt-casing">
         <div className="screen-bezel">
@@ -31,7 +57,7 @@ export function Game() {
                     type="button"
                     aria-label={`Row ${Math.floor(index / 3) + 1}, column ${index % 3 + 1}: ${mark ?? "empty"}${winning ? ", winning cell" : ""}`}
                     aria-disabled={unavailable}
-                    onClick={() => { if (!unavailable) dispatch({ type: "play", index }); }}
+                    onClick={() => { if (!unavailable) act({ type: "play", index }); }}
                     className={cn("board-cell", mark === "X" && "mark-x", mark === "O" && "mark-o", winning && "winning-cell")}
                   >
                     <span aria-hidden="true">{mark}</span>
@@ -53,14 +79,16 @@ export function Game() {
           </div>
         </div>
         <div className="monitor-controls">
-          <div className="monitor-badge" aria-hidden="true"><span className="power-light" /> TTT</div>
+          <SoundToggle enabled={soundEnabled} onToggle={toggleSound} />
           <div className="round-controls">
-            <Button type="button" title="Clear the board and keep scores" className="terminal-button" onClick={() => dispatch({ type: "next-round" })}>Next round</Button>
-            <Button type="button" title="Clear the board and all scores" variant="outline" className="terminal-button terminal-button-secondary" onClick={() => dispatch({ type: "reset-session" })}>Reset session</Button>
+            <Button type="button" title="Clear the board and keep scores" className="terminal-button" onClick={() => act({ type: "next-round" })}>Next round</Button>
+            <Button type="button" title="Clear the board and all scores" variant="outline" className="terminal-button terminal-button-secondary" onClick={() => act({ type: "reset-session" })}>Reset session</Button>
           </div>
         </div>
       </div>
       <div className="monitor-stand" aria-hidden="true" />
     </section>
+    <Narration caption={state.narrator.caption} />
+    </>
   );
 }

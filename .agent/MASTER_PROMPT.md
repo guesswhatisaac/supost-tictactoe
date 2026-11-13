@@ -41,7 +41,7 @@ selected moves, results, and restarts, with page-session memory and a visible to
 Hesitation and suggested-move reactions are outside scope.
 
 Keep subtitles short and gameplay clear. Tone, triggers, and memory are approved;
-original dialogue remains subject to user review.
+the user approved the tone progression and authorized the implemented original dialogue, recorded in src/lib/dialogue.ts.
 
 ## 4. Documentation map
 
@@ -56,7 +56,7 @@ original dialogue remains subject to user review.
 | 06-delivery.md | Vercel setup, verification, task order, public URL |
 
 Decisions live in the relevant doc. All six domain documents are initialized and approved.
-Exact fonts, original dialogue, and implemented visuals remain review items.
+Exact bundled fonts and final implemented visuals remain review items. Narrator tone and implementation are approved in 02-narrator.md.
 
 ## 5. Initialization protocol
 

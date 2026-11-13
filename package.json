@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "next typegen && tsc --noEmit",
-    "test": "node --experimental-strip-types --test tests/game.test.ts"
+    "test": "node --experimental-strip-types --test tests/*.test.ts"
   },
   "engines": {
     "node": ">=22.6.0"

@@ -43,7 +43,8 @@ board lines, and scores. Amber remains the lamp-light accent.
 - Add static scanlines, a fine phosphor-mask texture, edge shading, and a faint glass reflection. Overlays are decorative, ignore pointer input, and do not flicker or animate.
 - Use a dark blue-gray upper wall and darker lower paneling, with a clear thin horizontal chair rail near 56% of the viewport height, based on the user's clarified reference. No vertical stripe behind the title. Keep the room and tabletop dim, with restrained lamp spill.
 - The tabletop spans the full viewport and continues into the foreground; it must not end as a floating slab inside the scene container.
-- Bold condensed white subtitles at the bottom, in a dedicated area that does not overlap gameplay or controls.
+- On desktop, put captions on the wall to the right of the CRT, left-aligned and rendered in darker wall-colored ink, without a caption box or glow. They should feel printed into the wallpaper. Keep the toggle legible below them.
+- On narrow or short landscape screens, use the dedicated lower caption area to avoid covering the computer or shrinking game targets. Caption placement must not introduce scrolling or overlap controls.
 - Fixed camera with subtle interaction effects. No camera drift.
 - Build scenery from HTML and CSS shapes; no external 3D model assets.
 - Fluorescent office lighting remains reference context rather than the selected scene lighting.
