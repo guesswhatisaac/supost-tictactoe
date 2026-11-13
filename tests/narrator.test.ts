@@ -8,7 +8,7 @@ function play(moves: number[], initial = createSession()) {
 }
 const next = (state: SessionState) => sessionReducer(state, { type: "next-round" });
 
-test("initial narration is enabled and deterministic for hydration and reducer replay", () => {
+test("initial narration is deterministic for hydration and reducer replay", () => {
   assert.deepEqual(createSession(), createSession());
   assert.equal(createSession().narrator.caption, dialogue.welcome.polite[0]);
 });

@@ -25,15 +25,15 @@ as required by MASTER_PROMPT.md.
 
 ## Verification checklist
 
-These items are planned, not yet verified.
+Checked items have automated verification; unchecked items remain review work.
 
 - [x] Automated pure-rule tests cover all eight winning lines, draws, invalid moves, turn progression, scoring once per completed round, and both reset transitions.
 - [x] Gameplay, CRT scene, and narrator production build succeeds.
 - [ ] Complete final manual gameplay review; browser automation has verified X starts, a win, and both resets, while rule tests cover invalid moves and terminal locking.
 - [ ] Next round preserves scores and memory; Reset session clears both; reload clears session state.
 - [x] Narrator captions follow selected triggers, prioritize results, avoid stale queues, and do not block moves (rule and browser checks).
-- [x] Narration toggle leaves gameplay intact and preserves silent round tracking (rule and browser checks).
-- [x] Turning narration off hides the caption; both reset controls preserve the toggle and replace stale captions only when enabled (rule and browser checks).
+- [x] Narrator button removed at the user's request; captions remain available independently of sound muting.
+- [x] Sound-effects control mutes playback, leaves gameplay and captions intact, and survives both resets (browser checks).
 - [ ] Complete final mobile review including narrator captions. Browser checks currently verify the board, status, and reset controls at 390px and 320px.
 - [ ] Keyboard operation, visible focus, status announcements, readable contrast, and reduced-motion behavior work.
 - [ ] User reviews the visual result, exact fonts, and original dialogue.
@@ -116,3 +116,35 @@ These items are planned, not yet verified.
 - At desktop sizes, moved narration to the wall on the right of the computer, left-aligned with dark ink and subtle surface shading instead of a floating subtitle box.
 - Restored the desk keyboard at normal desktop heights. Narrow/short layouts retain the dedicated caption footer and simplified scenery.
 - Browser checks cover all 48 captions at the nine documented viewport sizes, ensuring no overlap with the CRT or toggle, no scrolling, and usable control targets. Reviewed the desktop result visually.
+
+## Sound effects and narrator button removal
+
+This supersedes historical entries about the narrator toggle and its resume dialogue.
+
+- Removed the narrator button, its state/action, and the four unreachable resume lines. Captions are always on; 44 live lines remain.
+- Added distinct quiet synthesized move tones, a win chime, a draw cue, and separate reset sounds using native Web Audio, with no audio assets or additional dependencies.
+- A compact speaker icon on the CRT bezel controls sound only. Muting stops scheduled voices; both resets preserve it. Reload returns sound to its default enabled setting.
+- Audio is initialized lazily during interactions, with low gain and short envelopes. Invalid moves are silent; results supersede normal move sounds. Rapid actions replace pending audio. Unsupported/blocked audio does not affect gameplay. Audio context is disposed on unmount.
+- All 42 tests and type checking pass. Browser checks instrument actual oscillator scheduling, verify no audio initialization on page load, mute/resume, reset preserving mute, unsupported-audio fallback, and all 44 captions fitting at nine viewport sizes with 44px minimum controls and no scrolling.
+- Final audible-volume review on the user's device remains part of visual/interaction review.
+
+## Hover, controls, and mug refinement
+
+- Added softer, pitch-varied hover/focus sounds for playable cells and controls. Only run after interaction has unlocked audio; throttle rapid transitions, ignore stationary hover and touch entry, and leave result cues uninterrupted.
+- Added a code-native SVG beige/green cursor for interactive buttons and retro uppercase monospace button lettering, allowing labels to wrap on narrow screens.
+- Fixed mug stacking with a separate cup body over the handle, and lowered the handle below the rim.
+- All 42 tests and type checking pass. Browser checks verify distinct hover pitches, stationary hover silence, muting, no hover audio initialization, cursor/font application, mug z-order, and no-scroll/target-size/caption-fit checks at all nine documented viewport sizes. Inspected desktop and 320px screenshots.
+
+## Placement sounds, gain, and global cursor
+
+- Distinguished X placement with a bright rising double tick and O with a rounded descending sine tone.
+- Applied the requested 50% gain increase centrally to all effects: main peak gain 0.045 to 0.0675 and hover gain 0.012 to 0.018.
+- Refined the custom arrow and applied it consistently to the entire document, including text, wall, CRT, active controls, and occupied cells.
+- All 42 tests pass. Browser instrumentation confirms the gain values and identical computed cursors inside/outside the CRT; existing sound, mute, gameplay, and nine-viewport layout checks pass.
+
+## Placement/reset audibility fix
+
+- The user reported missing placement and next/reset sounds. Increased cue duration and added a short sustained gain segment instead of an immediate exponential fade, retaining the requested 1.5 gain multiplier.
+- Added a 20ms renderer lead-in. X retains a bright rising double tick; O is a rounded descending 440-to-330Hz tone. Next round and Reset session now use longer, clearly pitched two-note cues.
+- Browser verification now routes the actual mixed signal through an analyser rather than relying only on oscillator-start instrumentation. Measured nonzero substantial output for all four cues: X RMS about 0.039, O about 0.048, Next round about 0.039, and Reset session about 0.039.
+- Hover, mute/resume, unsupported-audio fallback, gameplay, and all nine viewport checks still pass. User-device listening review remains necessary for subjective loudness.

@@ -32,6 +32,9 @@ export function Game() {
     if (soundEnabled) player.current?.stop();
     setSoundEnabled(!soundEnabled);
   }
+  function hover(target: number) {
+    if (soundEnabled) player.current?.hover(target);
+  }
   const { board, turn, result, scores } = state.game;
   const status = result.type === "win"
     ? `${result.winner} wins!`
@@ -58,6 +61,8 @@ export function Game() {
                     aria-label={`Row ${Math.floor(index / 3) + 1}, column ${index % 3 + 1}: ${mark ?? "empty"}${winning ? ", winning cell" : ""}`}
                     aria-disabled={unavailable}
                     onClick={() => { if (!unavailable) act({ type: "play", index }); }}
+                    onPointerEnter={(event) => { if (!unavailable && event.pointerType !== "touch") hover(index); }}
+                    onFocus={() => { if (!unavailable) hover(index); }}
                     className={cn("board-cell", mark === "X" && "mark-x", mark === "O" && "mark-o", winning && "winning-cell")}
                   >
                     <span aria-hidden="true">{mark}</span>
@@ -79,10 +84,10 @@ export function Game() {
           </div>
         </div>
         <div className="monitor-controls">
-          <SoundToggle enabled={soundEnabled} onToggle={toggleSound} />
+          <SoundToggle enabled={soundEnabled} onToggle={toggleSound} onHover={() => hover(9)} />
           <div className="round-controls">
-            <Button type="button" title="Clear the board and keep scores" className="terminal-button" onClick={() => act({ type: "next-round" })}>Next round</Button>
-            <Button type="button" title="Clear the board and all scores" variant="outline" className="terminal-button terminal-button-secondary" onClick={() => act({ type: "reset-session" })}>Reset session</Button>
+            <Button type="button" title="Clear the board and keep scores" className="terminal-button" onPointerEnter={(event) => { if (event.pointerType !== "touch") hover(10); }} onFocus={() => hover(10)} onClick={() => act({ type: "next-round" })}>Next round</Button>
+            <Button type="button" title="Clear the board and all scores" variant="outline" className="terminal-button terminal-button-secondary" onPointerEnter={(event) => { if (event.pointerType !== "touch") hover(11); }} onFocus={() => hover(11)} onClick={() => act({ type: "reset-session" })}>Reset session</Button>
           </div>
         </div>
       </div>

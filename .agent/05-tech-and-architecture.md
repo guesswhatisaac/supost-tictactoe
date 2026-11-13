@@ -19,6 +19,9 @@
 - **Styling:** Tailwind for layout, CSS for the CRT/scenery and perspective, and shadcn/ui for suitable controls.
 - **Typography:** a bundled condensed display font plus a readable UI font. Exact font families remain to be selected and reviewed before adding assets.
 - **Rendering:** HTML/CSS with CSS 3D transforms. No Three.js or React Three Fiber.
+- **Sound:** optional quiet Web Audio synthesis, created lazily during interaction, with no audio files or new packages. The bezel sound control is independent of the game reducer and always-on captions. Playback failure must not interrupt gameplay; stop active voices on mute and dispose the audio context on unmount.
+- **Hover feedback:** quiet, pitch-varied ticks on entering playable squares or focusing controls, only after an interaction has unlocked audio. Hover never creates/resumes an audio context, queues sounds, or interrupts result cues; throttle rapid transitions and skip touch pointer entry.
+- **Sound refinement:** X uses a bright rising two-note triangle click; O uses a lower descending sine tone. A shared 1.5 gain multiplier raises every cue, including hover, by 50% relative to its prior envelope.
 
 ## Component and data boundaries
 

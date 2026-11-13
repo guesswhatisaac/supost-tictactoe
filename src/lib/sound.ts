@@ -10,11 +10,16 @@ export function getSoundCue(previous: GameState, next: GameState, action: GameAc
   return previous.turn === "X" ? "move-x" : "move-o";
 }
 
-type Note = { frequency: number; delay: number; duration: number; wave?: OscillatorType };
+type Note = { frequency: number; endFrequency?: number; delay: number; duration: number; wave?: OscillatorType };
+
+const volumeMultiplier = 1.5;
 
 const cues: Record<SoundCue, readonly Note[]> = {
-  "move-x": [{ frequency: 460, delay: 0, duration: 0.055 }],
-  "move-o": [{ frequency: 340, delay: 0, duration: 0.055 }],
+  "move-x": [
+    { frequency: 660, delay: 0, duration: 0.10 },
+    { frequency: 880, delay: 0.075, duration: 0.12 },
+  ],
+  "move-o": [{ frequency: 440, endFrequency: 330, delay: 0, duration: 0.20, wave: "sine" }],
   win: [
     { frequency: 523.25, delay: 0, duration: 0.12 },
     { frequency: 659.25, delay: 0.09, duration: 0.12 },
@@ -25,12 +30,12 @@ const cues: Record<SoundCue, readonly Note[]> = {
     { frequency: 277.18, delay: 0.12, duration: 0.18 },
   ],
   "next-round": [
-    { frequency: 260, delay: 0, duration: 0.06, wave: "sine" },
-    { frequency: 520, delay: 0.065, duration: 0.09, wave: "sine" },
+    { frequency: 392, delay: 0, duration: 0.12 },
+    { frequency: 587.33, delay: 0.11, duration: 0.18 },
   ],
   "reset-session": [
-    { frequency: 390, delay: 0, duration: 0.08, wave: "sine" },
-    { frequency: 195, delay: 0.07, duration: 0.12, wave: "sine" },
+    { frequency: 523.25, delay: 0, duration: 0.12 },
+    { frequency: 261.63, delay: 0.11, duration: 0.20 },
   ],
 };
 
@@ -39,7 +44,37 @@ export function createSoundPlayer() {
   let context: AudioContext | null = null;
   let generation = 0;
   let disposed = false;
+  let lastHover = -Infinity;
+  let hoverBlockedUntil = 0;
   const voices = new Set<{ oscillator: OscillatorNode; gain: GainNode }>();
+
+  function schedule(note: Note, start: number, volume: number) {
+    if (!context) return;
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
+    oscillator.type = note.wave ?? "triangle";
+    oscillator.frequency.value = note.frequency;
+    const when = start + note.delay;
+    if (note.endFrequency) {
+      oscillator.frequency.setValueAtTime(note.frequency, when);
+      oscillator.frequency.exponentialRampToValueAtTime(note.endFrequency, when + note.duration);
+    }
+    gain.gain.setValueAtTime(0, when);
+    gain.gain.linearRampToValueAtTime(volume * volumeMultiplier, when + 0.005);
+    gain.gain.setValueAtTime(volume * volumeMultiplier, when + note.duration * 0.45);
+    gain.gain.exponentialRampToValueAtTime(0.0001 * volumeMultiplier, when + note.duration);
+    oscillator.connect(gain);
+    gain.connect(context.destination);
+    const voice = { oscillator, gain };
+    voices.add(voice);
+    oscillator.onended = () => {
+      oscillator.disconnect();
+      gain.disconnect();
+      voices.delete(voice);
+    };
+    oscillator.start(when);
+    oscillator.stop(when + note.duration + 0.01);
+  }
 
   function stop() {
     generation += 1;
@@ -61,28 +96,10 @@ export function createSoundPlayer() {
       const currentGeneration = generation;
       if (context.state === "suspended") await context.resume();
       if (disposed || currentGeneration !== generation || context.state !== "running") return;
-      const start = context.currentTime;
-      for (const note of cues[cue]) {
-        const oscillator = context.createOscillator();
-        const gain = context.createGain();
-        oscillator.type = note.wave ?? "triangle";
-        oscillator.frequency.value = note.frequency;
-        const when = start + note.delay;
-        gain.gain.setValueAtTime(0, when);
-        gain.gain.linearRampToValueAtTime(0.045, when + 0.005);
-        gain.gain.exponentialRampToValueAtTime(0.0001, when + note.duration);
-        oscillator.connect(gain);
-        gain.connect(context.destination);
-        const voice = { oscillator, gain };
-        voices.add(voice);
-        oscillator.onended = () => {
-          oscillator.disconnect();
-          gain.disconnect();
-          voices.delete(voice);
-        };
-        oscillator.start(when);
-        oscillator.stop(when + note.duration + 0.01);
-      }
+      // Give the audio renderer a small lead-in so short cues do not start late.
+      const start = context.currentTime + 0.02;
+      hoverBlockedUntil = start + Math.max(...cues[cue].map(note => note.delay + note.duration));
+      for (const note of cues[cue]) schedule(note, start, 0.045);
     } catch {
       // Audio is optional: it must never interrupt a move or caption update.
     }
@@ -90,6 +107,19 @@ export function createSoundPlayer() {
 
   return {
     play,
+    hover(target: number) {
+      // Hover never unlocks or resumes audio, interrupts a result, or queues ticks.
+      if (disposed || !context || context.state !== "running") return;
+      const now = context.currentTime;
+      if (now < hoverBlockedUntil || now - lastHover < 0.065) return;
+      lastHover = now;
+      const frequencies = [220, 246.94, 261.63, 293.66, 329.63, 349.23, 392, 440, 493.88, 370, 311.13, 277.18];
+      try {
+        schedule({ frequency: frequencies[target] ?? 330, delay: 0, duration: 0.035, wave: "sine" }, now, 0.012);
+      } catch {
+        // Pointer and keyboard navigation remain usable without audio.
+      }
+    },
     stop,
     dispose() {
       disposed = true;

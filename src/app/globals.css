@@ -25,6 +25,8 @@
 }
 
 :root {
+  --scene-cursor: url("/cursors/terminal-pointer.svg") 3 2, auto;
+  cursor: var(--scene-cursor);
   color-scheme: dark;
   --background: #18181a;
   --foreground: #f2f0ea;
@@ -241,7 +243,6 @@
   font-size: clamp(30px, calc(var(--board-size) / 5), 60px);
   font-weight: 800;
   line-height: 1;
-  cursor: pointer;
   transition: background-color 140ms, box-shadow 140ms;
 }
 .board-cell::before {
@@ -257,7 +258,6 @@
 }
 .board-cell > span { position: relative; z-index: 1; }
 .board-cell:not([aria-disabled="true"]):hover::before { opacity: 1; }
-.board-cell[aria-disabled="true"] { cursor: default; }
 .board-cell:focus-visible { z-index: 2; outline: none; }
 .board-cell:focus-visible::before { opacity: 1; background: #6ee08a55; }
 .board-cell:focus-visible::after {
@@ -278,7 +278,7 @@
 .monitor-controls { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 16px; }
 .monitor-badge { display: flex; align-items: center; gap: 8px; color: #3a392f; font-size: 12px; letter-spacing: 0.18em; }
 .round-controls { display: flex; flex-wrap: wrap; gap: 8px; }
-.terminal-button { min-height: 48px; border: 1px solid #6b5820; border-radius: 3px; box-shadow: 0 2px 0 #6b5820; font-size: 12px; }
+.terminal-button { min-height: 48px; border: 1px solid #6b5820; border-radius: 3px; box-shadow: 0 2px 0 #6b5820; font-family: "Lucida Console", "Courier New", monospace; font-size: 11px; font-weight: 700; line-height: 1.2; letter-spacing: 0.04em; text-transform: uppercase; white-space: normal; text-align: center; }
 .terminal-button-secondary { border-color: #706957; background: #c9c0a9; color: #2b2c28; box-shadow: 0 2px 0 #706957; }
 .terminal-button-secondary:hover { background: #ddd5c1; color: #18181a; }
 .terminal-button:focus-visible { --ring: #222820; --background: #cfc6ae; }
@@ -287,9 +287,10 @@
 .desk-keyboard { position: absolute; z-index: 3; bottom: 8px; left: calc(50% - 140px); width: 280px; height: 88px; padding: 10px 13px 8px; border: 1px solid #8d8774; border-radius: 5px; background: #b8b09b; box-shadow: 0 7px 0 #77715f, 8px 18px 18px #0008; transform: rotateX(45deg); pointer-events: none; }
 .keyboard-keys { height: 48px; background: repeating-linear-gradient(0deg, transparent 0 12px, #9a9381 12px 15px), repeating-linear-gradient(90deg, #d2cab7 0 15px, #8d8774 15px 18px); border: 2px solid #928a76; border-radius: 2px; }
 .keyboard-spacebar { width: 43%; height: 13px; margin: 7px auto 0; border: 1px solid #938b79; border-radius: 2px; background: #d2cab7; box-shadow: 0 2px #7b7462; }
-.desk-mug { position: absolute; z-index: 1; bottom: 100px; right: 120px; width: 62px; height: 72px; border-radius: 7px 7px 22px 22px; background: linear-gradient(90deg, #827e69, #c9c3ae 45%, #9b937b); box-shadow: 12px 12px 13px #0007; transform: rotate(-4deg); pointer-events: none; }
-.desk-mug::before { content: ""; position: absolute; top: -4px; left: 0; width: 62px; height: 15px; border: 5px solid #b8b09b; border-radius: 50%; background: #292521; }
-.desk-mug::after { content: ""; position: absolute; z-index: -1; top: 14px; right: -21px; width: 30px; height: 36px; border: 7px solid #b8b09b; border-radius: 50%; }
+.desk-mug { position: absolute; z-index: 1; bottom: 100px; right: 120px; width: 62px; height: 72px; transform: rotate(-4deg); pointer-events: none; }
+.mug-body { position: absolute; z-index: 1; inset: 0; border-radius: 7px 7px 22px 22px; background: linear-gradient(90deg, #827e69, #c9c3ae 45%, #9b937b); box-shadow: 12px 12px 13px #0007; }
+.desk-mug::before { content: ""; position: absolute; z-index: 2; top: -4px; left: 0; width: 62px; height: 15px; border: 5px solid #b8b09b; border-radius: 50%; background: #292521; }
+.desk-mug::after { content: ""; position: absolute; z-index: 0; top: 22px; right: -21px; width: 30px; height: 36px; border: 7px solid #b8b09b; border-radius: 50%; }
 .desk-lamp { position: absolute; z-index: 1; bottom: 96px; left: 64px; width: 165px; height: 320px; transform: scaleX(-1); pointer-events: none; }
 .lamp-light { position: absolute; top: 5px; right: -50px; width: 600px; height: 520px; border-radius: 50%; background: radial-gradient(ellipse at 78% 20%, #e8a94b24, #e8a94b08 38%, transparent 65%); filter: blur(24px); }
 .lamp-arm { position: absolute; top: 72px; left: 80px; width: 12px; height: 210px; border-right: 2px solid #8b784d; background: linear-gradient(90deg, #393b32, #77735a, #343830); transform: rotate(-15deg); transform-origin: bottom; }
@@ -387,9 +388,15 @@
 }
 .monitor-controls .round-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); flex: 1; min-width: 0; width: auto; }
 .monitor-controls .terminal-button { padding-right: 8px; padding-left: 8px; }
-.sound-toggle { flex: 0 0 44px; width: 44px; min-height: 48px; padding: 0; border: 1px solid #706957; border-radius: 3px; color: #2b2c28; background: #c9c0a966; }
+.sound-toggle { flex: 0 0 46px; width: 46px; min-height: 48px; padding: 0; border: 1px solid #706957; border-radius: 3px; color: #2b2c28; background: #c9c0a966; }
 .sound-toggle:hover { color: #18181a; background: #ddd5c1; }
 .sound-toggle:focus-visible { --ring: #222820; --background: #cfc6ae; }
+body,
+body *,
+body *::before,
+body *::after {
+  cursor: var(--scene-cursor);
+}
 @media (max-height: 900px) {
   .desk-scene { padding-bottom: 84px; }
   .desk-keyboard { display: none; }

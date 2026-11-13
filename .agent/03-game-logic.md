@@ -24,8 +24,8 @@
 
 - **Next round:** clears the board and result, with X to start. Preserves scores and narrator memory.
 - **Reset session:** clears the board, result, scores, and narrator memory, with X to start.
-- Both controls preserve the narrator's enabled/disabled setting. Reset session does not turn narration back on.
-- Either reset removes the old caption. When narration is enabled, replace it with fresh opening commentary; when disabled, keep captions hidden.
+- Both controls preserve the sound-effects enabled/disabled setting. Narrator captions are always on following the user's removal of the narrator toggle.
+- Either reset replaces the old caption with fresh restart commentary.
 - Starting another round does not count an unfinished board as a completed round, win, or draw.
 
 ## State responsibilities

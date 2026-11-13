@@ -14,12 +14,12 @@
 - **Presentation:** subtitles only.
 - **Triggers:** openings, selected moves, results, and restarts. Not every move needs commentary. Hesitation and suggested-move reactions are outside the selected trigger scope.
 - **Memory:** remember earlier rounds within the current page session; reload clears that memory. No cross-visit persistence.
-- **Controls:** narration is on by default with a visible toggle.
+- **Controls:** narrator captions are always on. The user explicitly removed the narrator button. The separate speaker control mutes sound effects only.
 
 ## Gameplay boundaries
 
 - Narration never gates a move, result, or restart.
-- Turning narration off leaves the game fully playable.
+- Sound effects and captions must never gate gameplay.
 - Original dialogue lives in data rather than components.
 
 ## Selected move commentary
@@ -35,22 +35,19 @@
 - Result commentary takes priority over move commentary for the same move.
 - Keep captions short, as established in MASTER_PROMPT.md. Final wording is reviewed with the user.
 
-## Round memory and toggle
+## Round memory
 
 - Track completed round count, X wins, O wins, draws, and the previous round's opening move.
 - Retain memory across rounds within the current page session only. Reload clears it.
-- Continue tracking rounds silently while narration is disabled.
-- When re-enabled, show fresh commentary appropriate to the current state rather than replaying missed captions.
-- The toggle affects narration only, never game rules or available moves.
-- Turning narration off hides the current caption immediately.
-- Next round and Reset session preserve the toggle setting and discard the previous caption. When enabled, show fresh opening commentary; when disabled, leave captions hidden.
+- Both reset controls replace the previous caption with fresh restart commentary.
+- The sound-effects mute setting is independent of captions and preserved by both reset controls.
 - Reset session clears round history and line-repetition memory. Next round preserves them.
 
 ## Approved tone and implementation
 
 The user selected a politely controlling baseline, with quiet exasperation emerging
 across replays, and explicitly authorized implementation. This supersedes the earlier
-dialogue draft. The live, editable source is src/lib/dialogue.ts: 48 original lines,
+dialogue draft. The live, editable source is src/lib/dialogue.ts: 44 original lines,
 with polite and weary alternatives for each approved category.
 
 Examples:
@@ -70,14 +67,14 @@ Examples:
 - Alternate lines within a category and tone avoid the most recently used line for that category. No random initialization or hydration mismatch.
 - Win/draw commentary takes precedence over move commentary. Ordinary moves preserve the current caption; invalid moves change nothing.
 - Scores and completed-round totals remain in shared game state, avoiding duplicate narrator counters. Narrator memory separately stores round progression, opening cells, and used lines.
-- Muting clears the caption immediately while game state and opening memory continue updating. Resume shows a fresh neutral line, never a queue of missed captions.
-- Both reset controls preserve the toggle. Reset session clears opening, round, and repetition memory, with a fresh reset caption when enabled.
-- On desktop, captions are left-aligned on the right wall in darker printed-looking ink, with the visible toggle beneath. Narrow/short screens retain a dedicated scene footer. Both placements avoid the board and controls and reserve space while muted to prevent layout shifts.
+- Narrator toggle state and resume dialogue were removed following the user's instruction. Sound muting never changes captions, game scores, or opening memory.
+- Reset session clears opening, round, and repetition memory, with fresh restart commentary.
+- On desktop, captions are left-aligned on the right wall in darker printed-looking ink with no button below. Narrow/short screens retain a dedicated scene footer. Both placements avoid the board and controls.
 - Caption updates use a polite live region, separate from authoritative turn/result announcements.
 - Uses system font fallbacks until exact bundled fonts are reviewed.
 
 ## Verification
 
-Pure-rule tests cover priority, openings, replay progression, alternate lines, silent
-tracking, resume, and resets. Browser checks cover actual interactions, reload
+Pure-rule tests cover priority, openings, replay progression, alternate lines,
+and resets. Browser checks cover actual interactions, reload
 behavior, and every caption fitting at nine viewport sizes without overlap or scrolling.

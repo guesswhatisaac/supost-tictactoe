@@ -29,13 +29,20 @@ npm run build
 - `src/components/ui`: shared shadcn/ui controls.
 - `src/components/game.tsx`: interactive game board, scores, and controls.
 - `src/components/desk-scene.tsx`: decorative desk, lamp, and keyboard.
-- `src/components/narration.tsx`: subtitles and the narration toggle.
+- `src/components/narration.tsx`: narrator captions.
+- `src/components/sound-toggle.tsx`: sound control on the CRT bezel.
 - `src/lib/game.ts`: pure game rules and game reducer.
 - `src/lib/session.ts`: coordinates game and narrator updates in one React reducer.
 - `src/lib/narrator.ts` and `src/lib/dialogue.ts`: narrator memory, line selection, and typed dialogue data.
+- `src/lib/sound.ts`: quiet, synthesized retro sound effects using browser audio.
 - `tests/game.test.ts`: game-rule tests, including all reachable board states.
-- `tests/narrator.test.ts`: narration priority, replay variation, mute/resume, and reset tests.
+- `tests/narrator.test.ts`: narration priority, replay variation, and reset tests.
+- `tests/sound.test.ts`: valid-move cues, result priority, and silent invalid moves.
 
-The game uses a React reducer without a backend or persistent storage. Reloading clears scores and starts a fresh session. Muting narration hides captions while scores and opening memory continue updating. Next round preserves that history; Reset session clears it and keeps the narration toggle setting. Captions replace one another immediately and never delay moves.
+The game uses a React reducer without a backend or persistent storage. Reloading clears scores and starts a fresh session. Next round preserves that history; Reset session clears it. Narrator captions are always available, replace one another immediately, and never delay moves.
+
+Short sound effects respond to valid moves, results, and resets. The speaker control mutes them without affecting captions or gameplay, and resets preserve the sound setting. Browser audio starts only after an interaction. There are no audio downloads or added sound dependencies; unavailable audio silently falls back to the playable game.
+
+After the first click unlocks browser audio, entering different squares plays quiet ticks with different pitches. Keyboard focus uses the same feedback. Hover feedback is throttled, stays silent while a result cue plays, and respects the sound mute control.
 
 The scenery uses HTML/CSS perspective, gradients, and shadows, with no 3D engine or model assets. Mobile layouts simplify the props while keeping the CRT playable. Interaction effects respect reduced-motion preferences. Dialogue is local data, with no runtime API calls. Final bundled fonts remain pending review; current typography uses system fallbacks.

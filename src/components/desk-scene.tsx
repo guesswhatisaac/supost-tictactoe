@@ -9,7 +9,7 @@ export function DeskScene({ children }: { children: ReactNode }) {
         <div className="lamp-shade" />
         <div className="lamp-base" />
       </div>
-      <div className="desk-mug" aria-hidden="true" />
+      <div className="desk-mug" aria-hidden="true"><div className="mug-body" /></div>
       {children}
       <div className="desk-keyboard" aria-hidden="true">
         <div className="keyboard-keys" />

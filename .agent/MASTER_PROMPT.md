@@ -37,7 +37,7 @@ The user supplied slate and steel tones, mustard accents, warm beige props,
 phosphor green or amber light, and bold condensed subtitles. See 04-design.md.
 
 Approved narrator behavior is specified in 02-narrator.md: subtitles for openings,
-selected moves, results, and restarts, with page-session memory and a visible toggle.
+selected moves, results, and restarts, with page-session memory. The user removed the narrator toggle; captions remain on. A separate bezel control mutes optional sound effects.
 Hesitation and suggested-move reactions are outside scope.
 
 Keep subtitles short and gameplay clear. Tone, triggers, and memory are approved;

@@ -43,7 +43,7 @@ board lines, and scores. Amber remains the lamp-light accent.
 - Add static scanlines, a fine phosphor-mask texture, edge shading, and a faint glass reflection. Overlays are decorative, ignore pointer input, and do not flicker or animate.
 - Use a dark blue-gray upper wall and darker lower paneling, with a clear thin horizontal chair rail near 56% of the viewport height, based on the user's clarified reference. No vertical stripe behind the title. Keep the room and tabletop dim, with restrained lamp spill.
 - The tabletop spans the full viewport and continues into the foreground; it must not end as a floating slab inside the scene container.
-- On desktop, put captions on the wall to the right of the CRT, left-aligned and rendered in darker wall-colored ink, without a caption box or glow. They should feel printed into the wallpaper. Keep the toggle legible below them.
+- On desktop, put captions on the wall to the right of the CRT, left-aligned and rendered in darker wall-colored ink, without a caption box or glow. They should feel printed into the wallpaper. No narrator button, as requested by the user.
 - On narrow or short landscape screens, use the dedicated lower caption area to avoid covering the computer or shrinking game targets. Caption placement must not introduce scrolling or overlap controls.
 - Fixed camera with subtle interaction effects. No camera drift.
 - Build scenery from HTML and CSS shapes; no external 3D model assets.
@@ -60,7 +60,7 @@ painting, numbered-door motifs such as "42", or screenshot textures.
 ## Responsive layout
 
 - On small screens, simplify scenery and enlarge the playable CRT rather than switching to a different flat-board presentation.
-- Keep all nine cells, turn/result text, scores, reset controls, and narrator toggle accessible without scenery obscuring them.
+- Keep all nine cells, turn/result text, scores, reset controls, and sound control accessible without scenery obscuring them.
 - Decorative perspective must preserve legible labels and usable cell targets.
 - Fit the composition to the available viewport height so the board, scores, and reset controls can be seen without scrolling on common desktop, tablet, and phone screens. Adapt the title and scene to a side-by-side layout on short landscape viewports.
 - Size the board from the scene's available height and width. Clip only decorative overflow; do not hide gameplay or controls to simulate a fitting layout.
@@ -70,6 +70,9 @@ painting, numbered-door motifs such as "42", or screenshot textures.
 - The user rejected promotional labels and filler such as "A game for two", "One device. Nine squares. Three in a row.", "Local / Two players", and the local-player/rules footer.
 - Remove those entire header/footer groups and their divider lines. Keep the title, actual turn/result, scores, and actionable controls.
 - Reset explanations belong on the controls as concise descriptive titles rather than an extra visible paragraph under the monitor.
+- Buttons use uppercase retro monospace system lettering (Lucida Console / Courier New), with compact tracking and wrapping on narrow screens. No bundled font asset was added by this refinement.
+- The entire page uses the same refined beige/green arrow cursor from public/cursors/terminal-pointer.svg, with a dark outline, subtle shadow, and native fallback. It must remain consistent over the wall, text, CRT, buttons, and unavailable cells.
+- The mug handle sits lower on the side and behind the cup body; the rim is the topmost layer.
 
 ## Accessibility and motion
 
