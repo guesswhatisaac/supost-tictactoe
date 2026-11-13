@@ -28,7 +28,7 @@ as required by MASTER_PROMPT.md.
 These items are planned, not yet verified.
 
 - [ ] Automated pure-rule tests cover all eight winning lines, draws, invalid moves, turn progression, scoring once per completed round, and both reset transitions.
-- [ ] Production build succeeds.
+- [x] Scaffold production build succeeds. Repeat after implementing gameplay, styling, and narration.
 - [ ] Manual gameplay confirms X starts, occupied cells are protected, and finished rounds accept no more moves.
 - [ ] Next round preserves scores and memory; Reset session clears both; reload clears session state.
 - [ ] Narrator captions follow selected triggers, prioritize results, avoid stale queues, and do not block moves.
@@ -51,3 +51,12 @@ These items are planned, not yet verified.
 - Single-sitting application with one polished scene.
 - No automated browser-test suite in the initial scope.
 - No application code, tests, build, or deployment has been completed by initializing this document.
+
+## Scaffold progress
+
+- User authorized scaffolding. App Router, TypeScript, Tailwind, shadcn/ui configuration and Button, and a placeholder home page are implemented.
+- Installed Next.js 16.4.6, React 19.3.1, Tailwind 4.3.5, and TypeScript 5.9.3; exact versions are recorded in package.json and package-lock.json.
+- Type checking and the production build pass. npm installation reports zero known vulnerabilities after removing optional ESLint tooling.
+- No browser/manual gameplay verification has occurred; the placeholder has no game behavior yet.
+- Exact fonts and original dialogue remain pending review. No deployment or commit was made.
+- .agent/ is ignored for new files but existing planning files remain tracked; the earlier untracking permission request was rejected. Resolve before committing.

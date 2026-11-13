@@ -61,7 +61,7 @@ Exact fonts, original dialogue, and implemented visuals remain review items.
 ## 5. Initialization protocol
 
 Initialization is complete. The protocol below applies only when explicitly reopening
-planning; do not repeat approved interviews. Scaffolding still awaits the user's go-ahead.
+planning; do not repeat approved interviews. The user has authorized scaffolding.
 
 The decisions belong to the user. Do not write application code until initialization
 is complete and the user authorizes scaffolding.

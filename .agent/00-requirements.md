@@ -41,5 +41,5 @@ Check items only after verifying them in the running app.
 - All six domain documents are initialized from user decisions and approvals.
 - Exact font families and original narrator dialogue still require user review.
 - The implemented visual result requires review against the approved direction.
-- Scaffolding requires the user's go-ahead after the initialization summary.
+- The user authorized scaffolding after the initialization summary.
 - Vercel deployment requires approval of the prepared application.
