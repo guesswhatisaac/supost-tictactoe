@@ -1,7 +1,7 @@
 import type { GameAction, GameState } from "./game.ts";
 import type { SceneObject } from "./narrator.ts";
 
-export type SoundCue = "move-x" | "move-o" | "win" | "draw" | "next-round" | "reset-session" | SceneObject;
+type SoundCue = "move-x" | "move-o" | "win" | "draw" | "next-round" | "reset-session" | SceneObject;
 
 export function getSoundCue(previous: GameState, next: GameState, action: GameAction): SoundCue | null {
   if (previous === next) return null;
@@ -14,6 +14,7 @@ export function getSoundCue(previous: GameState, next: GameState, action: GameAc
 type Note = { frequency: number; endFrequency?: number; delay: number; duration: number; wave?: OscillatorType };
 
 const volumeMultiplier = 1.5;
+const hoverFrequencies = [220, 246.94, 261.63, 293.66, 329.63, 349.23, 392, 440, 493.88, 370, 311.13, 277.18];
 
 const cues: Record<SoundCue, readonly Note[]> = {
   keyboard: [
@@ -125,9 +126,8 @@ export function createSoundPlayer() {
       const now = context.currentTime;
       if (now < hoverBlockedUntil || now - lastHover < 0.065) return;
       lastHover = now;
-      const frequencies = [220, 246.94, 261.63, 293.66, 329.63, 349.23, 392, 440, 493.88, 370, 311.13, 277.18];
       try {
-        schedule({ frequency: frequencies[target] ?? 330, delay: 0, duration: 0.035, wave: "sine" }, now, 0.012);
+        schedule({ frequency: hoverFrequencies[target] ?? 330, delay: 0, duration: 0.035, wave: "sine" }, now, 0.012);
       } catch {
         // Pointer and keyboard navigation remain usable without audio.
       }

@@ -6,7 +6,7 @@ export type RoundResult =
   | { type: "win"; winner: Mark; cells: readonly number[] }
   | { type: "draw" };
 
-export type GameEvent =
+type GameEvent =
   | { type: "round-start" | "session-reset" }
   | { type: "move"; index: number; mark: Mark; opening: boolean; blockedWin: boolean };
 

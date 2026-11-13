@@ -2,7 +2,6 @@ import { dialogue, type DialogueCategory } from "./dialogue.ts";
 import { getRoundResult, type Cell, type GameState, type Mark } from "./game.ts";
 
 export type SceneObject = "keyboard" | "mug" | "lamp" | "wall" | "desk";
-type ButtonKind = "next-round" | "reset-session" | "sound-change";
 
 export type NarratorObservation = (
   | { type: "idle"; boardKey: string; roundIndex: number }
@@ -33,7 +32,7 @@ export type NarratorState = {
   flags: Partial<Record<DialogueCategory, true>>;
   distractions: number;
   objectClicks: Partial<Record<SceneObject, number>>;
-  buttonBurst: { key: ButtonKind | null; lastAt: number; count: number };
+  buttonBurst: { lastAt: number; count: number };
   captionAt: number | null;
 };
 
@@ -58,7 +57,7 @@ export function boardKey(board: readonly Cell[]) {
   return board.map(cell => cell ?? "-").join("");
 }
 
-export function winningMoves(board: readonly Cell[], mark: Mark): number[] {
+function winningMoves(board: readonly Cell[], mark: Mark): number[] {
   if (getRoundResult(board).type !== "playing") return [];
   return board.flatMap((cell, index) => {
     if (cell !== null) return [];
@@ -83,7 +82,7 @@ export function createNarrator(): NarratorState {
     lastLines: {}, moves: [], previousMoves: [], abandonStreak: 0, lastWinner: null,
     winStreak: 0, drawStreak: 0, missedWins: { X: 0, O: 0 }, occupiedAttempts: 0,
     finishedAttempts: 0, idleGiven: false, idlePending: false, soundChanges: 0, flags: {},
-    distractions: 0, objectClicks: {}, buttonBurst: { key: null, lastAt: 0, count: 0 },
+    distractions: 0, objectClicks: {}, buttonBurst: { lastAt: 0, count: 0 },
     captionAt: null,
   }, "welcome");
 }
@@ -114,11 +113,10 @@ export function advanceNarrator(state: NarratorState, game: GameState, previous:
     if (winningMoves(previous.board, "X").length || winningMoves(previous.board, "O").length) return say(memory, "abandonThreat");
     return say(memory, state.moves.length === 1 ? "abandonEarly" : "abandon");
   }
-  if (event.type !== "move") return state;
 
   let memory: NarratorState = {
     ...state, moves: [...state.moves, event.index], idlePending: false, distractions: 0,
-    buttonBurst: { key: null, lastAt: 0, count: 0 },
+    buttonBurst: { lastAt: 0, count: 0 },
   };
   if (event.opening) memory = { ...memory, currentOpening: event.index };
   if (game.result.type === "win") {
@@ -191,11 +189,11 @@ export function observeNarrator(state: NarratorState, game: GameState, event: Na
   return memory.occupiedAttempts >= 5 ? once(memory, "occupiedAgain") : memory.occupiedAttempts >= 2 ? once(memory, "occupied", { mark: game.board[event.index]! }) : memory;
 }
 
-export function observeButton(previous: NarratorState, next: NarratorState, key: ButtonKind, at?: number): NarratorState {
+export function observeButton(previous: NarratorState, next: NarratorState, at?: number): NarratorState {
   if (at === undefined || !Number.isFinite(at)) return next;
   const elapsed = at - previous.buttonBurst.lastAt;
-  const count = previous.buttonBurst.key !== null && elapsed >= 0 && elapsed <= 850 ? previous.buttonBurst.count + 1 : 1;
-  const memory = { ...next, buttonBurst: { key, lastAt: at, count } };
+  const count = previous.buttonBurst.count > 0 && elapsed >= 0 && elapsed <= 850 ? previous.buttonBurst.count + 1 : 1;
+  const memory = { ...next, buttonBurst: { lastAt: at, count } };
   if (count === 4) return say(memory, "buttonSpam");
   if (count === 8) return say(memory, "buttonSpamAgain");
   if (count > 4 && (previous.category === "buttonSpam" || previous.category === "buttonSpamAgain")) {

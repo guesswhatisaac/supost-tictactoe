@@ -104,58 +104,58 @@ export function Game() {
 
   return (
     <>
-    <section aria-labelledby="game-title" className="game-terminal">
-      <div className="crt-casing">
-        <div className="screen-bezel">
-          <div className="monitor-screen">
-            <p id="game-status" role="status" aria-live="polite" aria-atomic="true" className="game-status" data-result={result.type}>
-              {status}
-            </p>
-
-            <div role="group" aria-label="Tic-Tac-Toe board" aria-describedby="game-status" className="game-board">
-              {board.map((mark, index) => {
-                const unavailable = mark !== null || result.type !== "playing";
-                const winning = result.type === "win" && result.cells.includes(index);
-                return (
-                  <button
-                    key={index}
-                    type="button"
-                    aria-label={`Row ${Math.floor(index / 3) + 1}, column ${index % 3 + 1}: ${mark ?? "empty"}${winning ? ", winning cell" : ""}`}
-                    aria-disabled={unavailable}
-                    onClick={() => act({ type: "play", index })}
-                    onPointerEnter={(event) => { if (!unavailable && event.pointerType !== "touch") hover(index); }}
-                    onFocus={() => { if (!unavailable) hover(index); }}
-                    className={cn("board-cell", mark === "X" && "mark-x", mark === "O" && "mark-o", winning && "winning-cell")}
-                  >
-                    <span aria-hidden="true">{mark}</span>
-                  </button>
-                );
-              })}
+      <section aria-labelledby="game-title" className="game-terminal">
+        <div className="crt-casing">
+          <div className="screen-bezel">
+            <div className="monitor-screen">
+              <p id="game-status" role="status" aria-live="polite" aria-atomic="true" className="game-status" data-result={result.type}>
+                {status}
+              </p>
+  
+              <div role="group" aria-label="Tic-Tac-Toe board" aria-describedby="game-status" className="game-board">
+                {board.map((mark, index) => {
+                  const unavailable = mark !== null || result.type !== "playing";
+                  const winning = result.type === "win" && result.cells.includes(index);
+                  return (
+                    <button
+                      key={index}
+                      type="button"
+                      aria-label={`Row ${Math.floor(index / 3) + 1}, column ${index % 3 + 1}: ${mark ?? "empty"}${winning ? ", winning cell" : ""}`}
+                      aria-disabled={unavailable}
+                      onClick={() => act({ type: "play", index })}
+                      onPointerEnter={(event) => { if (!unavailable && event.pointerType !== "touch") hover(index); }}
+                      onFocus={() => { if (!unavailable) hover(index); }}
+                      className={cn("board-cell", mark === "X" && "mark-x", mark === "O" && "mark-o", winning && "winning-cell")}
+                    >
+                      <span aria-hidden="true">{mark}</span>
+                    </button>
+                  );
+                })}
+              </div>
+  
+              <dl aria-label="Session scores" className="game-scores">
+                {([
+                  ["X wins", scores.X], ["Draws", scores.draws], ["O wins", scores.O],
+                ] as const).map(([label, value]) => (
+                  <div key={label}>
+                    <dt>{label}</dt>
+                    <dd>{String(value).padStart(2, "0")}</dd>
+                  </div>
+                ))}
+              </dl>
             </div>
-
-            <dl aria-label="Session scores" className="game-scores">
-              {([
-                ["X wins", scores.X], ["Draws", scores.draws], ["O wins", scores.O],
-              ] as const).map(([label, value]) => (
-                <div key={label}>
-                  <dt>{label}</dt>
-                  <dd>{String(value).padStart(2, "0")}</dd>
-                </div>
-              ))}
-            </dl>
+          </div>
+          <div className="monitor-controls">
+            <SoundToggle enabled={soundEnabled} onToggle={toggleSound} onHover={() => hover(9)} />
+            <div className="round-controls">
+              <Button type="button" title="Clear the board and keep scores" className="terminal-button" onPointerEnter={(event) => { if (event.pointerType !== "touch") hover(10); }} onFocus={() => hover(10)} onClick={() => act({ type: "next-round" })}>Next round</Button>
+              <Button type="button" title="Clear the board and all scores" variant="outline" className="terminal-button terminal-button-secondary" onPointerEnter={(event) => { if (event.pointerType !== "touch") hover(11); }} onFocus={() => hover(11)} onClick={() => act({ type: "reset-session" })}>Reset session</Button>
+            </div>
           </div>
         </div>
-        <div className="monitor-controls">
-          <SoundToggle enabled={soundEnabled} onToggle={toggleSound} onHover={() => hover(9)} />
-          <div className="round-controls">
-            <Button type="button" title="Clear the board and keep scores" className="terminal-button" onPointerEnter={(event) => { if (event.pointerType !== "touch") hover(10); }} onFocus={() => hover(10)} onClick={() => act({ type: "next-round" })}>Next round</Button>
-            <Button type="button" title="Clear the board and all scores" variant="outline" className="terminal-button terminal-button-secondary" onPointerEnter={(event) => { if (event.pointerType !== "touch") hover(11); }} onFocus={() => hover(11)} onClick={() => act({ type: "reset-session" })}>Reset session</Button>
-          </div>
-        </div>
-      </div>
-      <div className="monitor-stand" aria-hidden="true" />
-    </section>
-    <Narration caption={state.narrator.caption} />
+        <div className="monitor-stand" aria-hidden="true" />
+      </section>
+      <Narration caption={state.narrator.caption} />
     </>
   );
 }
